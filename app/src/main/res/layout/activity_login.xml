@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityLogin">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@color/transparent"/>
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <include
+                android:id="@+id/input_layout"
+                layout="@layout/login_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="170dip"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="71dp" />
+
+
+            <CheckBox
+                android:id="@+id/remember_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="21dp"
+                android:text="记住密码"
+                android:textColor="#1a1919"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/button_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="40dip"
+                android:background="@drawable/text_bg"
+                android:gravity="center"
+                android:paddingLeft="15dip"
+                android:paddingTop="2dip"
+                android:paddingRight="15dip"
+                android:paddingBottom="2dip"
+                android:clickable="true"
+                android:text="登录"
+                android:textColor="#1a1818"
+                android:textSize="28sp"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:text="注册"
+                android:textColor="#201d1d"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+</FrameLayout>
+
+
