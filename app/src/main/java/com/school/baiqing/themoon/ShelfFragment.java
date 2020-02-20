@@ -30,8 +30,8 @@ public class ShelfFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shelf,container,false);
         mTextView = (TextView)view.findViewById(R.id.txt_content);
-        //mTextView = (TextView)getActivity().findViewById(R.id.txt_content);
-        mTextView.setText(context);
+        Bundle bundle=getArguments();
+        mTextView.setText(bundle.getString(BUNDLE_CONTEXT));
         return view;
     }
 }

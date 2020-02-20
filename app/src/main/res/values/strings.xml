@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">TheMoon</string>
+    <string name="app_name">The Moon</string>
+    <string name="shelf_fragment">书架</string>
+    <string name="library_fragment">图书馆</string>
+    <string name="user_fragment">我的</string>
+
+    <string name="register"> </string>
 </resources>
