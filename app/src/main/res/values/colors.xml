@@ -8,4 +8,7 @@
     <color name="text_white">#f1f2f5</color>
     <color name="text_black">#000000</color>
     <color name="transparent">#f9fbfc</color>
+
+
+    <color name="white">#f1f2f5</color>
 </resources>

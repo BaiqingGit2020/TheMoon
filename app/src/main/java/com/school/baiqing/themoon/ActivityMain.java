@@ -9,27 +9,34 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.school.baiqing.themoon.GreenDao.GreenDaoHelper;
+import com.school.baiqing.themoon.Util.APPCONST;
 
 public class ActivityMain extends AppCompatActivity implements View.OnClickListener{
     private TextView topBar;
     private TextView tabShelf;
     private TextView tabLibrary;
     private TextView tabUser;
+    private TextView tv_edit_finish;
+    private RelativeLayout editbookcase;
 
     private FrameLayout ly_content;
 
     private ShelfFragment shelfFragment ;
     private UserFragment userFragment;
     private LibraryFragment libraryFragment;
-    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
+        GreenDaoHelper.initDatabase(this);
         bindView();
 
         tabShelf.callOnClick();
@@ -42,6 +49,8 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
         tabLibrary = (TextView)this.findViewById(R.id.txt_library);
         tabUser = (TextView)this.findViewById(R.id.txt_user);
         ly_content = (FrameLayout) findViewById(R.id.fragment_container);
+        tv_edit_finish = (TextView)findViewById(R.id.tv_edit_finish);
+        editbookcase = (RelativeLayout)findViewById(R.id.rl_edit_titile);
 
         tabShelf.setOnClickListener(this);
         tabLibrary.setOnClickListener(this);
@@ -71,7 +80,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction = getSupportFragmentManager().beginTransaction();
         hideAllFragment(transaction);
         switch(v.getId()){
             case R.id.txt_shelf:
@@ -114,6 +123,27 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
         }
 
         transaction.commit();
+    }
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - APPCONST.exitTime > APPCONST.exitConfirmTime) {
+            Toast.makeText(this,"再按一次退出",Toast.LENGTH_SHORT).show();
+            APPCONST.exitTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
+    }
+    public ShelfFragment getShelfFragment(){
+        return this.shelfFragment;
+    }
+    public TextView getTopBar(){
+        return this.topBar;
+    }
+    public TextView getEditFinish(){
+        return this.tv_edit_finish;
+    }
+    public RelativeLayout getEditbookcase(){
+        return this.editbookcase;
     }
 }
 
