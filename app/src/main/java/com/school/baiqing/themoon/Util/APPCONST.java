@@ -20,7 +20,7 @@ public class APPCONST {
     public static final String BOOK = "book";
     public static final String FONT = "font";
 
-
+    public static final String EPUB_SAVE_PATH = MyApplication.getContext().getFilesDir() + "/epubFile";
 
 
     public static final String FILE_NAME_SETTING = "setting";

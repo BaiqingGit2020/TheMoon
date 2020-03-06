@@ -3,6 +3,7 @@ package com.school.baiqing.themoon.View;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.R;
+import com.school.baiqing.themoon.Service.BookService;
 import com.school.baiqing.themoon.Util.APPCONST;
 import com.school.baiqing.themoon.Util.DialogCreator;
 import com.school.baiqing.themoon.Util.StringHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,12 +30,13 @@ import java.util.ArrayList;
 
 public class BookcaseDragAdapter extends DragAdapter {
     private int mResourceId;
-    private ArrayList<Book> list;
+    private List<Book> list;
     private Context mContext;
     private boolean mEditState;
+    private BookService mBookService = new BookService();;
 
 
-    public BookcaseDragAdapter(Context context, int textViewResourceId, ArrayList<Book> objects, boolean editState) {
+    public BookcaseDragAdapter(Context context, int textViewResourceId, List<Book> objects, boolean editState) {
         mContext = context;
         mResourceId = textViewResourceId;
         list = objects;
@@ -65,6 +70,7 @@ public class BookcaseDragAdapter extends DragAdapter {
     public void remove(Book item) {
         list.remove(item);
         notifyDataSetChanged();
+        mBookService.DeleteBook(item);
     }
 
     public void add(Book item) {
@@ -93,11 +99,13 @@ public class BookcaseDragAdapter extends DragAdapter {
 
     private void initView(int position, ViewHolder viewHolder) {
         final Book book = getItem(position);
+        Log.i("Glide",book.getImgUrl());
+        Uri url = Uri.parse(book.getImgUrl());
         if (StringHelper.isEmpty(book.getImgUrl())) {
             book.setImgUrl("");
         }
         Glide.with(mContext)
-                .load(book.getImgUrl())
+                .load(url)
                 .error(R.mipmap.no_image)
                 .placeholder(R.mipmap.no_image)
                 .into(viewHolder.ivBookImg);
@@ -111,6 +119,7 @@ public class BookcaseDragAdapter extends DragAdapter {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 remove(book);
+
                                 dialogInterface.dismiss();
 
                             }

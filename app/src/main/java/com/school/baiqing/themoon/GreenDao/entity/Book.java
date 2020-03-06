@@ -13,8 +13,8 @@ public class Book implements Serializable {
     @Transient
     private static final long serialVersionUID = 1L;
 
-    @Id
-    private String id;
+    @Id(autoincrement = true)
+    private Long id;
 
     private String name;//书名
     private String chapterUrl;//书目Url
@@ -44,13 +44,12 @@ public class Book implements Serializable {
 
     private int lastReadPosition;//上次阅读到的章节的位置
 
-    @Generated(hash = 1524295773)
-    public Book(String id, String name, String chapterUrl, String imgUrl,
-            String desc, String author, String type, String updateDate,
-            String newestChapterId, String newestChapterTitle,
-            String newestChapterUrl, String historyChapterId,
-            int histtoryChapterNum, int sortCode, int noReadNum,
-            int chapterTotalNum, int lastReadPosition) {
+    @Generated(hash = 1407854594)
+    public Book(Long id, String name, String chapterUrl, String imgUrl, String desc,
+            String author, String type, String updateDate, String newestChapterId,
+            String newestChapterTitle, String newestChapterUrl,
+            String historyChapterId, int histtoryChapterNum, int sortCode,
+            int noReadNum, int chapterTotalNum, int lastReadPosition) {
         this.id = id;
         this.name = name;
         this.chapterUrl = chapterUrl;
@@ -74,11 +73,11 @@ public class Book implements Serializable {
     public Book() {
     }
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -209,4 +208,6 @@ public class Book implements Serializable {
     public void setLastReadPosition(int lastReadPosition) {
         this.lastReadPosition = lastReadPosition;
     }
+
+    
 }

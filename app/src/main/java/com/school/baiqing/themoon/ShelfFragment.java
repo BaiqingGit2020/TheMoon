@@ -15,8 +15,9 @@ import android.widget.Toast;
 
 
 import com.school.baiqing.themoon.GreenDao.entity.Book;
-import com.school.baiqing.themoon.GreenDao.GreenDaoHelper;
-import com.school.baiqing.themoon.GreenDao.gen.BookDao;
+import com.school.baiqing.themoon.GreenDao.util.DaoUtils;
+import com.school.baiqing.themoon.GreenDao.util.DaoUtilsStore;
+import com.school.baiqing.themoon.Service.BookService;
 import com.school.baiqing.themoon.Util.VibratorUtil;
 import com.school.baiqing.themoon.View.BookcaseDragAdapter;
 import com.school.baiqing.themoon.View.DragSortGridView;
@@ -27,6 +28,7 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShelfFragment extends Fragment implements View.OnClickListener{
     private String context;
@@ -36,13 +38,12 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
     private DragSortGridView mDragSortGridView;
 
     private BookcaseDragAdapter mBookcaseAdapter;
-    private ArrayList<Book> mBooks = new ArrayList<>();//书目数组
-    private Book book_long = new Book("0","龙王传说","",""," ",
+    private List<Book> mBooks = new ArrayList<>();//书目数组
+    private Book book_long = new Book(null,"龙王传说","",""," ",
             " ","","","","","","",1,1,1,1,1);
-    private Book book_wang = new Book("0","龙王传说","",""," ",
+    private Book book_wang = new Book(null,"龙王传说","",""," ",
             " ","","","","","","",1,1,1,1,1);
-    private BookDao mbook;
-
+    private BookService mBookService = new BookService();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -80,39 +81,24 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
         refreshLayout = view.findViewById(R.id.refreshLayout);
         mDragSortGridView = view.findViewById(R.id.gv_book);
         linearLayout.setOnClickListener(this);
-        linearLayout.setVisibility(View.VISIBLE);
-        mbook = GreenDaoHelper.getDaoSession().getBookDao();
-        mBooks.add(book_long);
-        mBooks.add(book_wang);
-        if(!mBooks.isEmpty())Log.i("shelf","mbooks is !empty");
-        mBookcaseAdapter = new BookcaseDragAdapter(getActivity(), R.layout.gridview_book_item, mBooks, false);
-        setDragSortGridView();
 
+        setDragSortGridView();
         setRefreshLayout();
         return view;
     }
-    public void read(){
-//        mbook.insert(book_long);
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        mbook.deleteByKey("0");
     }
 
     @Override
     public void onClick(View v) {
-        read();
-        Toast.makeText(getActivity(),"insert success",Toast.LENGTH_SHORT).show();
-        Log.i("shelf","init adapter");
-        mDragSortGridView.setDragModel(DragSortGridView.DRAG_BY_LONG_CLICK);
-        mBookcaseAdapter.add(book_long);
-        mDragSortGridView.setAdapter(mBookcaseAdapter);
-        mBookcaseAdapter.notifyDataSetChanged();
-        Log.i("shelf","set adapter");
-        linearLayout.setVisibility(View.GONE);
-        mDragSortGridView.setVisibility(View.VISIBLE);
+        mActivityMain.getTabLibrary().callOnClick();
     }
 
     public void setRefreshLayout() {
@@ -131,7 +117,9 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
             }
         });
     }
+
     public void setDragSortGridView(){
+
         mDragSortGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -142,7 +130,7 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
                     mBookcaseAdapter.notifyDataSetChanged();
                     mActivityMain.getTopBar().setVisibility(View.GONE);
                     mActivityMain.getEditbookcase().setVisibility(View.VISIBLE);
-                    VibratorUtil.Vibrate(getActivity(),200);
+                    VibratorUtil.Vibrate(getActivity(),100);
 //                    mBookcaseFragment.getGvBook().setOnItemClickListener(null);
                 }
                 return true;
@@ -163,6 +151,40 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
                 }
             }
         });
+    }
+
+
+    public void getData() {
+        init();
+        initNoReadNum();
+    }
+    private void init() {
+        initBook();
+        if (mBooks == null || mBooks.size() == 0) {
+            mDragSortGridView.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+        } else {
+            if(mBookcaseAdapter == null) {
+                mBookcaseAdapter = new BookcaseDragAdapter(this.getActivity(), R.layout.gridview_book_item, mBooks, false);
+                mDragSortGridView.setDragModel(-1);
+//                mDragSortGridView.setTouchClashparent(mActivityMain.getVpContent());
+       /*     mBookcaseFragment.getGvBook().setDragModel(DragSortGridView.DRAG_BY_LONG_CLICK);
+            ((MainActivity) (mBookcaseFragment.getActivity())).setViewPagerScroll(false);*/
+                mDragSortGridView.setAdapter(mBookcaseAdapter);
+            }else {
+                mBookcaseAdapter.notifyDataSetChanged();
+            }
+            linearLayout.setVisibility(View.GONE);
+            mDragSortGridView.setVisibility(View.VISIBLE);
+        }
+    }
+    private void initNoReadNum() {
+
+    }
+    private void initBook() {
+        mBooks.clear();
+        mBooks.addAll(mBookService.getShelfBook());
+
     }
 }
 

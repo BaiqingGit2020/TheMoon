@@ -1,7 +1,12 @@
 package com.school.baiqing.themoon;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,10 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.school.baiqing.themoon.GreenDao.GreenDaoHelper;
 import com.school.baiqing.themoon.Util.APPCONST;
 
 public class ActivityMain extends AppCompatActivity implements View.OnClickListener{
+    private static final int REQUEST_CODE_SD = 1;
+
     private TextView topBar;
     private TextView tabShelf;
     private TextView tabLibrary;
@@ -36,7 +42,6 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        GreenDaoHelper.initDatabase(this);
         bindView();
 
         tabShelf.callOnClick();
@@ -133,6 +138,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
             super.onBackPressed();
         }
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        checkPermission();
+    }
     public ShelfFragment getShelfFragment(){
         return this.shelfFragment;
     }
@@ -144,6 +154,35 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
     }
     public RelativeLayout getEditbookcase(){
         return this.editbookcase;
+    }
+    public TextView getTabLibrary(){
+        return this.tabLibrary;
+    }
+    /**
+     * 检查权限
+     */
+    private void checkPermission() {
+        //如果没有WRITE_EXTERNAL_STORAGE权限，则需要动态申请权限
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_CODE_SD);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,@NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_SD:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    break;
+                }
+                // 用户不同意
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 }
 

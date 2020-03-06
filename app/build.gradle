@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 28
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.school.baiqing.themoon"
         minSdkVersion 26
@@ -27,7 +28,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.4.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.0-alpha-1'
     implementation  'com.scwang.smart:refresh-header-classics:2.0.0-alpha-1'    //经典刷新头
     implementation  'com.scwang.smart:refresh-footer-ball:2.0.0-alpha-1'        //球脉冲加载
@@ -35,9 +36,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'//可视化数据库
 }
 greendao {
-    schemaVersion 8
+    schemaVersion 9
     daoPackage 'com.school.baiqing.themoon.GreenDao.gen'
     targetGenDir 'src/main/java'
 }

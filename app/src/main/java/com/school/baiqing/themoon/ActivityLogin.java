@@ -1,5 +1,6 @@
 package com.school.baiqing.themoon;
 
+import com.school.baiqing.themoon.Entity.User;
 import com.school.baiqing.themoon.Util.OkHttpUtil;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,12 +15,17 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -30,6 +36,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
     private TextView register;
 
     private String username,password,result;
+    private User person = new User();
     private TextView view_username,view_password;
     private TextView view_login,view_signup;
     private SharedPreferences.Editor editor;
@@ -43,6 +50,12 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
             super.handleMessage(msg);
             if(msg.obj=="success"){
                 Toast.makeText(ActivityLogin.this,"loginsuccess",Toast.LENGTH_LONG);
+            }
+            else if(msg.obj=="no User"){
+
+            }
+            else {
+
             }
         }
     };
@@ -85,24 +98,9 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 username = view_username.getText().toString();
                 password = view_password.getText().toString();
                 Log.i(TAG,"get Text successfuly");
-
-                login();
-//                new Thread(){
-//                    public void run(){
-//                        OkHttpUtil util = new OkHttpUtil();
-//                        Message message = Message.obtain();
-//                        String result = util.loginWithOkHttp("http://10.0.2.2:88/login.php",username,password);
-//                        if(result.equals("success")){
-//                            message.obj = LOGIN_SUCCESS;
-//                            handler.sendMessage(message);
-//                        }
-//                        else {
-//                            message.obj = LOGIN_SUCCESS;
-//                            handler.sendMessage(message);
-//                        }
-//                    }
-//                }.start();
-
+                try {
+                    login();
+                }catch (Exception e){e.printStackTrace();}
                 break;
             case R.id.register:
                 startActivity(new Intent(this,ActivityRegister.class));
@@ -115,22 +113,21 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
      * POST
      * okHTTP
      */
-    private void login(){
+    private void login()throws Exception{
         //实例化okHttp
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(5,TimeUnit.MINUTES)
-                .readTimeout(5,TimeUnit.MINUTES)
-                .build();
+        OkHttpClient client = new OkHttpClient();
         //okHttp参数
-        RequestBody requestBody = new FormBody.Builder()
-                .add("username",username)
-                .add("password",password)
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType((MultipartBody.FORM))
+                .addFormDataPart("username",username)
+                .addFormDataPart("password",password)
                 .build();
         final Request request = new Request.Builder()
-                .url("http://127.0.0.1:88/login.php")
+                .url(getString(R.string.https_host)+"/php/login.php")
                 .post(requestBody)
                 .build();
-        Call call = client.newCall(request);
+        Call call=client.newCall(request);
+        Log.i(TAG,call.toString());
         //异步请求
         call.enqueue(new Callback() {
             @Override
@@ -143,11 +140,11 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 Log.i(TAG,result);
                 if(result.equals("success"))
                 {
+                    Log.i(TAG,"login successfully");
                     //检查登录状态
                     if(view_rememberpassword.isChecked()){
                         editor.putString("UserName",username);
                         editor.putString("PassWord",password);
-                        editor.putString("NakeName",result);
                         editor.putBoolean("isLunched",true);
                     }
                     else editor.putString("UserName",username);
@@ -158,10 +155,11 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                     ActivityLogin.this.finish();
                 }
-                else
+                else if(result.equals("wrong"))
                 {
                     Looper.prepare();
                     Toast.makeText(ActivityLogin.this,"用户名或密码错误",Toast.LENGTH_LONG).show();
+                    Log.i(TAG,"login fail"+result);
                     Looper.loop();
                 }
             }

@@ -15,7 +15,7 @@ import com.school.baiqing.themoon.GreenDao.entity.Book;
 /** 
  * DAO for table "BOOK".
 */
-public class BookDao extends AbstractDao<Book, String> {
+public class BookDao extends AbstractDao<Book, Long> {
 
     public static final String TABLENAME = "BOOK";
 
@@ -24,7 +24,7 @@ public class BookDao extends AbstractDao<Book, String> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, String.class, "id", true, "ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property ChapterUrl = new Property(2, String.class, "chapterUrl", false, "CHAPTER_URL");
         public final static Property ImgUrl = new Property(3, String.class, "imgUrl", false, "IMG_URL");
@@ -56,7 +56,7 @@ public class BookDao extends AbstractDao<Book, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BOOK\" (" + //
-                "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
                 "\"CHAPTER_URL\" TEXT," + // 2: chapterUrl
                 "\"IMG_URL\" TEXT," + // 3: imgUrl
@@ -85,9 +85,9 @@ public class BookDao extends AbstractDao<Book, String> {
     protected final void bindValues(DatabaseStatement stmt, Book entity) {
         stmt.clearBindings();
  
-        String id = entity.getId();
+        Long id = entity.getId();
         if (id != null) {
-            stmt.bindString(1, id);
+            stmt.bindLong(1, id);
         }
  
         String name = entity.getName();
@@ -155,9 +155,9 @@ public class BookDao extends AbstractDao<Book, String> {
     protected final void bindValues(SQLiteStatement stmt, Book entity) {
         stmt.clearBindings();
  
-        String id = entity.getId();
+        Long id = entity.getId();
         if (id != null) {
-            stmt.bindString(1, id);
+            stmt.bindLong(1, id);
         }
  
         String name = entity.getName();
@@ -222,14 +222,14 @@ public class BookDao extends AbstractDao<Book, String> {
     }
 
     @Override
-    public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public Book readEntity(Cursor cursor, int offset) {
         Book entity = new Book( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // chapterUrl
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // imgUrl
@@ -252,7 +252,7 @@ public class BookDao extends AbstractDao<Book, String> {
      
     @Override
     public void readEntity(Cursor cursor, Book entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setChapterUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setImgUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
@@ -272,12 +272,13 @@ public class BookDao extends AbstractDao<Book, String> {
      }
     
     @Override
-    protected final String updateKeyAfterInsert(Book entity, long rowId) {
-        return entity.getId();
+    protected final Long updateKeyAfterInsert(Book entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public String getKey(Book entity) {
+    public Long getKey(Book entity) {
         if(entity != null) {
             return entity.getId();
         } else {

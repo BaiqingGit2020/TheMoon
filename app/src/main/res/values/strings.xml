@@ -3,6 +3,6 @@
     <string name="shelf_fragment">书架</string>
     <string name="library_fragment">图书馆</string>
     <string name="user_fragment">我的</string>
-
+    <string name="https_host">https://www.baiqing.work</string>
     <string name="register"> </string>
 </resources>
