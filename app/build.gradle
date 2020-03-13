@@ -39,7 +39,7 @@ dependencies {
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'//可视化数据库
 }
 greendao {
-    schemaVersion 9
+    schemaVersion 1
     daoPackage 'com.school.baiqing.themoon.GreenDao.gen'
     targetGenDir 'src/main/java'
 }
