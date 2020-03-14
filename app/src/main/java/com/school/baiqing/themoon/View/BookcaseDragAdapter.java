@@ -14,8 +14,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
+import com.school.baiqing.themoon.GreenDao.service.BookService;
 import com.school.baiqing.themoon.R;
-import com.school.baiqing.themoon.Service.BookService;
+import com.school.baiqing.themoon.ReadActivity;
 import com.school.baiqing.themoon.Util.APPCONST;
 import com.school.baiqing.themoon.Util.DialogCreator;
 import com.school.baiqing.themoon.Util.StringHelper;
@@ -70,7 +71,7 @@ public class BookcaseDragAdapter extends DragAdapter {
     public void remove(Book item) {
         list.remove(item);
         notifyDataSetChanged();
-        mBookService.DeleteBook(item);
+        mBookService.deleteBook(item);
     }
 
     public void add(Book item) {
@@ -152,11 +153,11 @@ public class BookcaseDragAdapter extends DragAdapter {
             viewHolder.ivBookImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = new Intent( mContext, ReadActivity.class);
-//                    intent.putExtra(APPCONST.BOOK, book);
-//                    book.setNoReadNum(0);
-//                    mBookService.updateEntity(book);
-//                    mContext.startActivity(intent);
+                    Intent intent = new Intent( mContext, ReadActivity.class);
+                    intent.putExtra(APPCONST.BOOK, book);
+                    book.setNoReadNum(0);
+                    mBookService.updateEntity(book);
+                    mContext.startActivity(intent);
                 }
             });
         }

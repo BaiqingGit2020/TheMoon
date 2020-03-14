@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fbreader.common.FBReaderHelper;
 import com.school.baiqing.themoon.Util.APPCONST;
 
 public class ActivityMain extends AppCompatActivity implements View.OnClickListener{
@@ -37,12 +38,14 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
     private LibraryFragment libraryFragment;
     private FragmentTransaction transaction;
 
+    private FBReaderHelper fbReaderHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         bindView();
+        fbReaderHelper = new FBReaderHelper(this);
 
         tabShelf.callOnClick();
     }
@@ -141,6 +144,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume(){
         super.onResume();
+        fbReaderHelper.bindToService(null);
         checkPermission();
     }
     public ShelfFragment getShelfFragment(){
@@ -158,6 +162,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
     public TextView getTabLibrary(){
         return this.tabLibrary;
     }
+    public FBReaderHelper getFbReaderHelper(){return fbReaderHelper;}
     /**
      * 检查权限
      */
@@ -183,6 +188,12 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+    @Override
+    protected void onPause() {
+        //注销fbreader阅读服务绑定，service只允许绑定一个activity，所以为保证下一个activity能使用阅读服务，必须注销
+        fbReaderHelper.unBind();
+        super.onPause();
     }
 }
 

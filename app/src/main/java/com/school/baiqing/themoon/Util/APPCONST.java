@@ -1,12 +1,14 @@
 package com.school.baiqing.themoon.Util;
 import android.os.Environment;
 
+import com.school.baiqing.themoon.MyApplication;
 import com.school.baiqing.themoon.R;
 public class APPCONST {
     public static String publicKey;//服务端公钥
     public static String privateKey;//app私钥
     public final static String s = "11940364935628058505";
 
+    public final static String DESKey = "1104210011001121104";
 
 
     public static final String ALARM_SCHEDULE_MSG = "alarm_schedule_msg";
@@ -20,7 +22,6 @@ public class APPCONST {
     public static final String BOOK = "book";
     public static final String FONT = "font";
 
-    public static final String EPUB_SAVE_PATH = MyApplication.getContext().getFilesDir() + "/epubFile";
 
 
     public static final String FILE_NAME_SETTING = "setting";

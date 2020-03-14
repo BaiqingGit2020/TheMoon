@@ -1,5 +1,6 @@
 package com.school.baiqing.themoon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,12 +16,13 @@ import android.widget.Toast;
 
 
 import com.school.baiqing.themoon.GreenDao.entity.Book;
-import com.school.baiqing.themoon.GreenDao.util.DaoUtils;
-import com.school.baiqing.themoon.GreenDao.util.DaoUtilsStore;
-import com.school.baiqing.themoon.Service.BookService;
+import com.school.baiqing.themoon.GreenDao.entity.Chapter;
+import com.school.baiqing.themoon.GreenDao.service.BookService;
 import com.school.baiqing.themoon.Util.VibratorUtil;
 import com.school.baiqing.themoon.View.BookcaseDragAdapter;
 import com.school.baiqing.themoon.View.DragSortGridView;
+import com.school.baiqing.themoon.Web.CommonApi;
+import com.school.baiqing.themoon.Web.ResultCallback;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -35,15 +37,13 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
     private ActivityMain mActivityMain;
     private RefreshLayout refreshLayout;
     private LinearLayout linearLayout;
+    private BookService mBookService;
     private DragSortGridView mDragSortGridView;
 
     private BookcaseDragAdapter mBookcaseAdapter;
     private List<Book> mBooks = new ArrayList<>();//书目数组
-    private Book book_long = new Book(null,"龙王传说","",""," ",
-            " ","","","","","","",1,1,1,1,1);
-    private Book book_wang = new Book(null,"龙王传说","",""," ",
-            " ","","","","","","",1,1,1,1,1);
-    private BookService mBookService = new BookService();
+
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -77,6 +77,7 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shelf,container,false);
         mActivityMain = (ActivityMain)getActivity();
+        mBookService = new BookService();
         linearLayout = view.findViewById(R.id.ll_no_data_tips);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         mDragSortGridView = view.findViewById(R.id.gv_book);
@@ -98,7 +99,9 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        mActivityMain.getTabLibrary().callOnClick();
+        Intent intent = new Intent(mActivityMain, SearchBookActivity.class);
+        mActivityMain.startActivity(intent);
+//        mActivityMain.getTabLibrary().callOnClick();
     }
 
     public void setRefreshLayout() {
@@ -167,9 +170,7 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
             if(mBookcaseAdapter == null) {
                 mBookcaseAdapter = new BookcaseDragAdapter(this.getActivity(), R.layout.gridview_book_item, mBooks, false);
                 mDragSortGridView.setDragModel(-1);
-//                mDragSortGridView.setTouchClashparent(mActivityMain.getVpContent());
-       /*     mBookcaseFragment.getGvBook().setDragModel(DragSortGridView.DRAG_BY_LONG_CLICK);
-            ((MainActivity) (mBookcaseFragment.getActivity())).setViewPagerScroll(false);*/
+
                 mDragSortGridView.setAdapter(mBookcaseAdapter);
             }else {
                 mBookcaseAdapter.notifyDataSetChanged();
@@ -179,12 +180,38 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
         }
     }
     private void initNoReadNum() {
+        for (final Book book : mBooks) {
+            CommonApi.getBookChapters(book.getChapterUrl(), new ResultCallback() {
+                @Override
+                public void onFinish(Object o, int code) {
+                    final ArrayList<Chapter> chapters = (ArrayList<Chapter>) o;
+                    int noReadNum = chapters.size() - book.getChapterTotalNum();
+                    if (noReadNum > 0) {
+                        book.setNoReadNum(noReadNum);
+                        mHandler.sendMessage(mHandler.obtainMessage(1));
+                    } else {
+                        book.setNoReadNum(0);
+                        mHandler.sendMessage(mHandler.obtainMessage(2));
+                    }
+                    mBookService.updateEntity(book);
+                }
 
+                @Override
+                public void onError(Exception e) {
+                    mHandler.sendMessage(mHandler.obtainMessage(1));
+                }
+            });
+        }
     }
     private void initBook() {
         mBooks.clear();
-        mBooks.addAll(mBookService.getShelfBook());
-
+        mBooks.addAll(mBookService.getAllBooks());
+        for (int i = 0; i < mBooks.size(); i++) {
+            if (mBooks.get(i).getSortCode() != i + 1) {
+                mBooks.get(i).setSortCode(i + 1);
+                mBookService.updateEntity(mBooks.get(i));
+            }
+        }
     }
 }
 
