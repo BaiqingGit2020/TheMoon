@@ -1,10 +1,12 @@
 package com.school.baiqing.themoon.GreenDao.service;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import com.school.baiqing.themoon.GreenDao.GreenDaoManager;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.GreenDao.gen.BookDao;
+import com.school.baiqing.themoon.Util.APPCONST;
 import com.school.baiqing.themoon.Util.StringHelper;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class BookService extends BaseService {
                 book.setNoReadNum(cursor.getInt(14));
                 book.setChapterTotalNum(cursor.getInt(15));
                 book.setLastReadPosition(cursor.getInt(16));
+                book.setLocation(cursor.getString(17));
                 books.add(book);
             }
         } catch (Exception e) {
@@ -103,6 +106,20 @@ public class BookService extends BaseService {
     }
 
     /**
+     *
+     * @param localpath
+     * @return
+     */
+    public boolean isExistByLocalPath(String localpath){
+        BookDao bookdao = GreenDaoManager.getInstance().getSession().getBookDao();;
+        List<Book> books = bookdao.queryBuilder().where(BookDao.Properties.ChapterUrl.eq(localpath)).list();
+        if (books.size()==0){
+            return false;
+        }else {
+            return true;
+        }
+    }
+    /**
      * 删除书
      * @param id
      */
@@ -119,6 +136,10 @@ public class BookService extends BaseService {
     public void deleteBook(Book book){
        deleteEntity(book);
         mChapterService.deleteBookALLChapterById(book.getId());
+    }
+    public void deleteAll(){
+        BookDao bookDao = GreenDaoManager.getInstance().getSession().getBookDao();
+        bookDao.deleteAll();
     }
 
     /**

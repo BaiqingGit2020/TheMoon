@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.GreenDao.entity.Chapter;
 import com.school.baiqing.themoon.GreenDao.service.BookService;
+import com.school.baiqing.themoon.Util.APPCONST;
+import com.school.baiqing.themoon.Util.StringHelper;
 import com.school.baiqing.themoon.Util.VibratorUtil;
 import com.school.baiqing.themoon.View.BookcaseDragAdapter;
 import com.school.baiqing.themoon.View.DragSortGridView;
@@ -99,9 +101,9 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(mActivityMain, SearchBookActivity.class);
-        mActivityMain.startActivity(intent);
-//        mActivityMain.getTabLibrary().callOnClick();
+//        Intent intent = new Intent(mActivityMain, SearchBookActivity.class);
+//        mActivityMain.startActivity(intent);
+        mActivityMain.getTabLibrary().callOnClick();
     }
 
     public void setRefreshLayout() {
@@ -158,6 +160,7 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
 
 
     public void getData() {
+//        mBookService.deleteAll();
         init();
         initNoReadNum();
     }
@@ -168,7 +171,7 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
             linearLayout.setVisibility(View.VISIBLE);
         } else {
             if(mBookcaseAdapter == null) {
-                mBookcaseAdapter = new BookcaseDragAdapter(this.getActivity(), R.layout.gridview_book_item, mBooks, false);
+                mBookcaseAdapter = new BookcaseDragAdapter(mActivityMain,this.getActivity(), R.layout.gridview_book_item, mBooks, false);
                 mDragSortGridView.setDragModel(-1);
 
                 mDragSortGridView.setAdapter(mBookcaseAdapter);
@@ -181,26 +184,28 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
     }
     private void initNoReadNum() {
         for (final Book book : mBooks) {
-            CommonApi.getBookChapters(book.getChapterUrl(), new ResultCallback() {
-                @Override
-                public void onFinish(Object o, int code) {
-                    final ArrayList<Chapter> chapters = (ArrayList<Chapter>) o;
-                    int noReadNum = chapters.size() - book.getChapterTotalNum();
-                    if (noReadNum > 0) {
-                        book.setNoReadNum(noReadNum);
-                        mHandler.sendMessage(mHandler.obtainMessage(1));
-                    } else {
-                        book.setNoReadNum(0);
-                        mHandler.sendMessage(mHandler.obtainMessage(2));
+            if(StringHelper.isEquals(book.getLocation(),APPCONST.BookLocation_network)) {
+                CommonApi.getBookChapters(book.getChapterUrl(), new ResultCallback() {
+                    @Override
+                    public void onFinish(Object o, int code) {
+                        final ArrayList<Chapter> chapters = (ArrayList<Chapter>) o;
+                        int noReadNum = chapters.size() - book.getChapterTotalNum();
+                        if (noReadNum > 0) {
+                            book.setNoReadNum(noReadNum);
+                            mHandler.sendMessage(mHandler.obtainMessage(1));
+                        } else {
+                            book.setNoReadNum(0);
+                            mHandler.sendMessage(mHandler.obtainMessage(2));
+                        }
+                        mBookService.updateEntity(book);
                     }
-                    mBookService.updateEntity(book);
-                }
 
-                @Override
-                public void onError(Exception e) {
-                    mHandler.sendMessage(mHandler.obtainMessage(1));
-                }
-            });
+                    @Override
+                    public void onError(Exception e) {
+                        mHandler.sendMessage(mHandler.obtainMessage(1));
+                    }
+                });
+            }
         }
     }
     private void initBook() {

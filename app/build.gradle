@@ -53,7 +53,7 @@ dependencies {
     implementation files('libs/sun.misc.BASE64Decoder.jar')
 }
 greendao {
-    schemaVersion 2
+    schemaVersion 6
     daoPackage 'com.school.baiqing.themoon.GreenDao.gen'
     targetGenDir 'src/main/java'
 }

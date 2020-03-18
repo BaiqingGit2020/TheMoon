@@ -110,9 +110,8 @@ public class TianLaiReadUtil {
                     book.setNewestChapterTitle(newChapter.text());
                 }
             }
+            book.setLocation(APPCONST.BookLocation_network);
             books.add(book);
-//            }
-//            }
         }
 
         return books;

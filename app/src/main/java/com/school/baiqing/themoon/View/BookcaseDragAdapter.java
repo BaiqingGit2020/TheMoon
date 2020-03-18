@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.fbreader.common.FBReaderHelper;
+import com.school.baiqing.themoon.ActivityMain;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.GreenDao.service.BookService;
 import com.school.baiqing.themoon.R;
@@ -20,6 +22,8 @@ import com.school.baiqing.themoon.ReadActivity;
 import com.school.baiqing.themoon.Util.APPCONST;
 import com.school.baiqing.themoon.Util.DialogCreator;
 import com.school.baiqing.themoon.Util.StringHelper;
+
+import org.geometerplus.android.fbreader.FBReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +38,18 @@ public class BookcaseDragAdapter extends DragAdapter {
     private List<Book> list;
     private Context mContext;
     private boolean mEditState;
-    private BookService mBookService = new BookService();;
+    private BookService mBookService = new BookService();
+    private FBReaderHelper fbReaderHelper;
+    private ActivityMain mActivityMain;
 
 
-    public BookcaseDragAdapter(Context context, int textViewResourceId, List<Book> objects, boolean editState) {
+    public BookcaseDragAdapter(ActivityMain activityMain,Context context, int textViewResourceId, List<Book> objects, boolean editState) {
         mContext = context;
         mResourceId = textViewResourceId;
         list = objects;
         mEditState = editState;
+        mActivityMain = activityMain;
+        fbReaderHelper = activityMain.getFbReaderHelper();
     }
 
     @Override
@@ -51,6 +59,7 @@ public class BookcaseDragAdapter extends DragAdapter {
         for (int i = 0; i < list.size(); i++) {
             list.get(i).setSortCode(i);
         }
+        mBookService.updateBooks(list);
     }
 
     @Override
@@ -77,6 +86,7 @@ public class BookcaseDragAdapter extends DragAdapter {
     public void add(Book item) {
         list.add(item);
         notifyDataSetChanged();
+        mBookService.addBook(item);
     }
 
     @Override
@@ -100,18 +110,17 @@ public class BookcaseDragAdapter extends DragAdapter {
 
     private void initView(int position, ViewHolder viewHolder) {
         final Book book = getItem(position);
-        Log.i("Glide",book.getImgUrl());
-        Uri url = Uri.parse(book.getImgUrl());
         if (StringHelper.isEmpty(book.getImgUrl())) {
             book.setImgUrl("");
         }
+        Uri url = Uri.parse(book.getImgUrl());
         Glide.with(mContext)
                 .load(url)
                 .error(R.mipmap.no_image)
                 .placeholder(R.mipmap.no_image)
                 .into(viewHolder.ivBookImg);
         Log.i("shelf","position"+position);
-        viewHolder.tvBookName.setText(book.getName());
+        viewHolder.tvBookName.setText(StringHelper.getFixedTitle(book.getName()));
         viewHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,11 +162,17 @@ public class BookcaseDragAdapter extends DragAdapter {
             viewHolder.ivBookImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent( mContext, ReadActivity.class);
-                    intent.putExtra(APPCONST.BOOK, book);
-                    book.setNoReadNum(0);
-                    mBookService.updateEntity(book);
-                    mContext.startActivity(intent);
+                    if(StringHelper.isEquals(book.getLocation(),APPCONST.BookLocation_local)){
+                        org.geometerplus.fbreader.book.Book Book = fbReaderHelper.getCollection().getBookByFile(book.getChapterUrl());
+                        FBReader.openBook(mActivityMain, Book, null);
+                    }
+                    else if(StringHelper.isEquals(book.getLocation(),APPCONST.BookLocation_network)){
+                        Intent intent = new Intent( mContext, ReadActivity.class);
+                        intent.putExtra(APPCONST.BOOK, book);
+                        book.setNoReadNum(0);
+                        mBookService.updateEntity(book);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
         }

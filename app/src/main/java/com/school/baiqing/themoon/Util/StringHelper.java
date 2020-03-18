@@ -157,5 +157,25 @@ public class StringHelper {
         }else return !isEmpty(str1) && !isEmpty(str2) && str1.equals(str2);
     }
 
+    public static String getFixedTitle(String title){
+        int count = 0,endIndex=0,maxLen=11;
+        for (int i = 0; i < title.length(); i++) {
+            char item = title.charAt(i);
+            if (item < 128) {
+                count = count + 1;
+            } else {
+                count = count + 2;
+            }
+            if(maxLen==count || (item>=128 && maxLen+1==count)){
+                endIndex=i;
+            }
+        }
+        if (count <= maxLen) {
+            return title;
+        } else {
 
+            return title.substring(0, endIndex) + "...";
+        }
+
+    }
 }

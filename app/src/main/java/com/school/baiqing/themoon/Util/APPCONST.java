@@ -22,7 +22,8 @@ public class APPCONST {
     public static final String BOOK = "book";
     public static final String FONT = "font";
 
-
+    public static final String BookLocation_local = "local";
+    public static final String BookLocation_network= "network";
 
     public static final String FILE_NAME_SETTING = "setting";
     public static final String FILE_NAME_UPDATE_INFO = "updateInfo";
