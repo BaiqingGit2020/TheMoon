@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".View.LibraryFragmentCollect">
+
+    <LinearLayout
+        android:id="@+id/add_local_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <ImageView
+            android:id="@+id/iv_book_img"
+            android:layout_width="80dp"
+            android:layout_height="110dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/add_book_local"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_book_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="bookname"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/add_network_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <ImageView
+            android:id="@+id/iv_search_img"
+            android:layout_width="80dp"
+            android:layout_height="110dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/add_book_network"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_search_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="bookname"/>
+
+    </LinearLayout>
+
+</LinearLayout>

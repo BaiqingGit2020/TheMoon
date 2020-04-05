@@ -30,17 +30,19 @@ public class RootTree extends LibraryTree {
 	public RootTree(IBookCollection collection, PluginCollection pluginCollection) {
 		super(collection, pluginCollection);
 
-		//new ExternalViewTree(this);
-		new FavoritesTree(this);
-		new RecentBooksTree(this);
-		new AuthorListTree(this);
-		new TitleListTree(this);
-		new SeriesListTree(this);
-		new TagListTree(this);
-		if (new SyncOptions().Enabled.getValue()) {
-			new SyncTree(this);
-		}
+		//
+//		new FavoritesTree(this);
+//
+//		new AuthorListTree(this);
+//		new TitleListTree(this);
+//		new SeriesListTree(this);
+//		new TagListTree(this);
+//		if (new SyncOptions().Enabled.getValue()) {
+//			new SyncTree(this);
+//		}
 		new FileFirstLevelTree(this);
+		new RecentBooksTree(this);
+		//new ExternalViewTree(this);
 	}
 
 	public LibraryTree getLibraryTree(LibraryTree.Key key) {

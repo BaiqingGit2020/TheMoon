@@ -7,7 +7,7 @@
 -->
 
 <resources>
-
+    <dimen name="bar_bottem">15dp</dimen>
     <dimen name="afc_30dp">30dp</dimen>
     <dimen name="afc_10dp">10dp</dimen>
     <dimen name="afc_5dp">5dp</dimen>

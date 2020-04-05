@@ -6,8 +6,6 @@ import java.io.Serializable;
  * Created by zhao on 2016/10/25.
  */
 
-
-
 public class JsonModel implements Serializable {
 
     private static final long serialVersionUID = -7169864463597942730L;

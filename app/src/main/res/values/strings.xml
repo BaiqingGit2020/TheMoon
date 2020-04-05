@@ -1,4 +1,4 @@
-<resources xmlns:tools ="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">The Moon</string>
     <string name="shelf_fragment">书架</string>
     <string name="library_fragment">图书馆</string>
@@ -26,4 +26,7 @@
     <string name="download_no_add_tips">缓存书籍需要先加入书架，您确定要添加本书到书架吗？</string>
 
     <string name="download_already_all_tips">书籍已经缓存整本！</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
