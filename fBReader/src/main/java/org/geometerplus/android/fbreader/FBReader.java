@@ -5,14 +5,19 @@ import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.WindowManager;
@@ -68,6 +73,9 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+
+import baiqing.database.MyDatabaseHelper;
 
 public class FBReader extends FBReaderMainActivity implements ZLApplicationWindow {
     public static final int RESULT_DO_NOTHING = RESULT_FIRST_USER;
@@ -83,6 +91,7 @@ public class FBReader extends FBReaderMainActivity implements ZLApplicationWindo
         final Intent intent = defaultIntent(context);
         FBReaderIntents.putBookExtra(intent, book);
         FBReaderIntents.putBookmarkExtra(intent, bookmark);
+        insertBookTntoDB(book,context);
         context.startActivity(intent);
     }
 
@@ -928,10 +937,65 @@ public class FBReader extends FBReaderMainActivity implements ZLApplicationWindo
         }
         return false;
     }
+    public static void insertBookTntoDB(Book book,Context context){
+        MyDatabaseHelper dbHelper = new MyDatabaseHelper(context,"read",null,6);
+        SQLiteDatabase  writeDB = dbHelper.getWritableDatabase();
+        SQLiteDatabase readDB = dbHelper.getReadableDatabase();
+        if(book != null){
+            String[] args = {String.valueOf(book.getPath())};
+            Cursor cursor = readDB.query("BOOK",new String[]{ "CHAPTER_URL","NAME" },"CHAPTER_URL=?",args,null,null,null, null);
+            if(cursor.getCount() == 0){
+                ContentValues values = new ContentValues();
+                values.put("ID",getStringRandom(12));
+                values.put("NAME",book.getTitle());
+                values.put("CHAPTER_URL",book.getPath());
+                values.put("IMG_URL","https://www.baiqing.work/images/no_img.jpg");
+                values.put("DESC","");
+                values.put("AUTHOR","");
+                values.put("TYPE","");
+                values.put("UPDATE_DATE","");
+                long sort_code = DatabaseUtils.queryNumEntries(readDB,"BOOK");
+                values.put("NEWEST_CHAPTER_ID","");
+                values.put("NEWEST_CHAPTER_TITLE","");
+                values.put("NEWEST_CHAPTER_URL","");
+                values.put("HISTORY_CHAPTER_ID","");
+                values.put("HISTTORY_CHAPTER_NUM",0);
+                values.put("SORT_CODE",sort_code+1);
+                values.put("NO_READ_NUM",0);
+                values.put("CHAPTER_TOTAL_NUM",0);
+                values.put("LAST_READ_POSITION",0);
+                values.put("LOCATION","local");
+
+                Log.i("themoonFBREADER",values.toString());
+                writeDB.insert("BOOK",null,values);
+            }
+        }
 
 
+
+    }
+    public static String getStringRandom(int length) {
+
+        String val = "";
+        Random random = new Random();
+
+        //参数length，表示生成几位随机数
+        for(int i = 0; i < length; i++) {
+            String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";
+            //输出字母还是数字
+            if( "char".equalsIgnoreCase(charOrNum) ) {
+                //输出是大写字母还是小写字母
+                int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
+                val += (char)(random.nextInt(26) + temp);
+            } else if( "num".equalsIgnoreCase(charOrNum) ) {
+                val += String.valueOf(random.nextInt(10));
+            }
+        }
+        return val;
+    }
     public FBReader getActivity() {
         return this;
     }
+
 
 }

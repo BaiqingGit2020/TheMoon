@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.fbreader.common.FBReaderHelper;
 import com.school.baiqing.themoon.ActivityMain;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
@@ -39,7 +40,6 @@ public class BookcaseDragAdapter extends DragAdapter {
     private Context mContext;
     private boolean mEditState;
     private BookService mBookService = new BookService();
-    private FBReaderHelper fbReaderHelper;
     private ActivityMain mActivityMain;
 
 
@@ -49,7 +49,6 @@ public class BookcaseDragAdapter extends DragAdapter {
         list = objects;
         mEditState = editState;
         mActivityMain = activityMain;
-        fbReaderHelper = activityMain.getFbReaderHelper();
     }
 
     @Override
@@ -116,8 +115,9 @@ public class BookcaseDragAdapter extends DragAdapter {
         Uri url = Uri.parse(book.getImgUrl());
         Glide.with(mContext)
                 .load(url)
-                .error(R.mipmap.no_image)
-                .placeholder(R.mipmap.no_image)
+                .apply(new RequestOptions()
+                        .error(R.mipmap.no_image)
+                        .placeholder(R.mipmap.no_image))
                 .into(viewHolder.ivBookImg);
         Log.i("shelf","position"+position);
         viewHolder.tvBookName.setText(StringHelper.getFixedTitle(book.getName()));
@@ -163,8 +163,19 @@ public class BookcaseDragAdapter extends DragAdapter {
                 @Override
                 public void onClick(View v) {
                     if(StringHelper.isEquals(book.getLocation(),APPCONST.BookLocation_local)){
-                        org.geometerplus.fbreader.book.Book Book = fbReaderHelper.getCollection().getBookByFile(book.getChapterUrl());
-                        FBReader.openBook(mActivityMain, Book, null);
+                        final FBReaderHelper fbReaderHelper = mActivityMain.getFbReaderHelper();
+                        //必须确保activity有绑定服务才能通过jni获取书本信息
+                        fbReaderHelper.bindToService(new Runnable() {
+                            @Override
+                            public void run() {
+                                org.geometerplus.fbreader.book.Book Book = fbReaderHelper.getCollection().getBookByFile(book.getChapterUrl());
+                                Log.i("themoondragbook",book.getChapterUrl());
+//                        Log.i("themoondragbook",Book.getPath());
+                                FBReader.openBook(mActivityMain, Book, null);
+                            }
+                        });
+
+
                     }
                     else if(StringHelper.isEquals(book.getLocation(),APPCONST.BookLocation_network)){
                         Intent intent = new Intent( mContext, ReadActivity.class);

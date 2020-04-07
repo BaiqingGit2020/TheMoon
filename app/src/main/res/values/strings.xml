@@ -22,7 +22,11 @@
     <string name="font">字体</string>
 
     <string name="tip">提示</string>
-
+    <string name="item_category_category_name">热血玄幻</string>
+    <string name="item_category_more">更多玄幻小说</string>
+    <string name="item_category_novel_name">小说名</string>
+    <string name="item_category_local_network">在线搜索</string>
+    <string name="item_category_local_local">本地图书</string>
     <string name="download_no_add_tips">缓存书籍需要先加入书架，您确定要添加本书到书架吗？</string>
 
     <string name="download_already_all_tips">书籍已经缓存整本！</string>

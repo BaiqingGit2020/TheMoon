@@ -2,6 +2,7 @@ package com.school.baiqing.themoon;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,10 @@ import android.widget.Toast;
 
 import com.fbreader.common.FBReaderHelper;
 import com.school.baiqing.themoon.Util.APPCONST;
+
+import org.geometerplus.android.fbreader.FBReaderApplication;
+
+import java.sql.Date;
 
 public class ActivityMain extends AppCompatActivity implements View.OnClickListener{
     private static final int REQUEST_CODE_SD = 1;
@@ -120,7 +125,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
                 selected();
                 tabUser.setSelected(true);
                 if(userFragment==null){
-                    userFragment = UserFragment.newInstance("第三个Fragment");
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM月dd日-HH时mm分");
+
+                    Date date = new Date(System.currentTimeMillis());
+                    userFragment = UserFragment.newInstance(dateFormat.format(date));
                     transaction.add(R.id.fragment_container,userFragment);
                 }else{
                     transaction.show(userFragment);
@@ -141,12 +150,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
             super.onBackPressed();
         }
     }
-    @Override
-    public void onResume(){
-        super.onResume();
-        fbReaderHelper.bindToService(null);
-        checkPermission();
-    }
+
     public ShelfFragment getShelfFragment(){
         return this.shelfFragment;
     }
@@ -188,6 +192,12 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        fbReaderHelper.bindToService(null);
+        checkPermission();
     }
     @Override
     protected void onPause() {

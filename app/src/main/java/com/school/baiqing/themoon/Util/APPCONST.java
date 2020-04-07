@@ -29,4 +29,12 @@ public class APPCONST {
     public static final String FILE_NAME_UPDATE_INFO = "updateInfo";
 
     public static final int REQUEST_FONT = 1001;
+
+
+    public static final String CATEGORY_MAJOR_CBXS = "出版小说";
+    public static final String CATEGORY_MAJOR_ZJMZ = "传记名著";
+    public static final String CATEGORY_MAJOR_CGLZ = "成功励志";
+    public static final String CATEGORY_MAJOR_RWSK = "人文社科";
+
+    public static final String CATEGORY_MAJOR_QCYQ = "青春言情";
 }

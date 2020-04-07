@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.R;
 import com.school.baiqing.themoon.Util.StringHelper;
@@ -57,9 +58,9 @@ public class SearchBookAdapter extends ArrayAdapter<Book> {
         }
         Glide.with(getContext())
                 .load(book.getImgUrl())
-//                .override(DipPxUtil.dip2px(getContext(), 80), DipPxUtil.dip2px(getContext(), 150))
-                .error(R.mipmap.no_image)
-                .placeholder(R.mipmap.no_image)
+                .apply(new RequestOptions()
+                        .error(R.mipmap.no_image)
+                        .placeholder(R.mipmap.no_image))
                 .into(viewHolder.ivBookImg);
         viewHolder.tvBookName.setText(book.getName());
         viewHolder.tvDesc.setText(book.getDesc());

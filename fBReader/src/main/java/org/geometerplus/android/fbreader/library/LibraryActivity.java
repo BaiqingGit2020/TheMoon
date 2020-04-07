@@ -240,6 +240,7 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 	private boolean onContextItemSelected(int itemId, Book book) {
 		switch (itemId) {
 			case ContextItemId.OpenBook:
+
 				FBReader.openBook(this, book, null);
 				return true;
 			case ContextItemId.ShowBookInfo:

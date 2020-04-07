@@ -90,11 +90,6 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
         return view;
     }
     @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
@@ -175,7 +170,8 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
                 mDragSortGridView.setDragModel(-1);
 
                 mDragSortGridView.setAdapter(mBookcaseAdapter);
-            }else {
+            }
+            else {
                 mBookcaseAdapter.notifyDataSetChanged();
             }
             linearLayout.setVisibility(View.GONE);
@@ -217,6 +213,11 @@ public class ShelfFragment extends Fragment implements View.OnClickListener{
                 mBookService.updateEntity(mBooks.get(i));
             }
         }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        getData();
     }
 }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="swipcard_width">280dp</dimen>
+    <dimen name="swipcard_height">400dp</dimen>
+    <dimen name="swipcard_content_padding">25dp</dimen>
+    <dimen name="item_category_first_height">15dp</dimen>
+    <dimen name="item_category_second_height">50dp</dimen>
+    <dimen name="item_category_category_name_size">18sp</dimen>
+    <dimen name="item_category_more_size">14sp</dimen>
+</resources>

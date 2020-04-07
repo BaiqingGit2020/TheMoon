@@ -1,16 +1,20 @@
 package com.school.baiqing.themoon.Util;
 
 import android.text.Html;
+import android.util.Log;
 
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.GreenDao.entity.Chapter;
+import com.school.baiqing.themoon.View.DiscoveryNovelData;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +41,7 @@ public class TianLaiReadUtil {
             char c = 160;
             String spaec = "" + c;
             content = content.replace(spaec, "  ");
+            content=content.replaceAll("[<br>]{0,}","").replaceAll("(?m)^\\s*$(\\n|\\r\\n)", "   ");//去掉空行
             return content;
         } else {
             return "";
@@ -115,6 +120,33 @@ public class TianLaiReadUtil {
         }
 
         return books;
+    }
+    public static List<DiscoveryNovelData> getCategory(){
+        List<DiscoveryNovelData> discoveryNovelDataList = new ArrayList<>();
+
+        Document doc;
+        try {
+            doc =Jsoup.connect("https://www.baiqing.work/novel/catgory.html").get();
+            Element divs = doc.getElementsByClass("main").get(0);
+            for(Element ll : divs.children()){
+                List<String> novelNameList = new ArrayList<>();
+                List<String> coverUrlList = new ArrayList<>();
+                DiscoveryNovelData discoveryNovelData = new DiscoveryNovelData();
+                Element items = ll.getElementsByClass("ll").get(0);
+                discoveryNovelData.setListname(items.attr("title"));
+                for(Element element : items.children()){
+                    Element item = element.child(0).child(0).child(0);
+                    novelNameList.add(item.attr("alt"));
+                    Log.d("themoonRecomm",item.attr("alt"));
+                    coverUrlList.add("https://www.23txt.com"+item.attr("src"));
+                }
+                discoveryNovelData.setNovelNameList(novelNameList);
+                discoveryNovelData.setCoverUrlList(coverUrlList);
+                discoveryNovelDataList.add(discoveryNovelData);
+            }
+
+        }catch (IOException e){e.printStackTrace();}
+        return discoveryNovelDataList;
     }
 
 }

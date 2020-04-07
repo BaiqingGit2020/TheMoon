@@ -2,14 +2,30 @@ package com.school.baiqing.themoon.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.school.baiqing.themoon.R;
 import com.school.baiqing.themoon.SearchBookActivity;
+import com.school.baiqing.themoon.Util.APPCONST;
+import com.school.baiqing.themoon.Util.DaoCaoRenReadUtil;
+import com.school.baiqing.themoon.Util.NetUtil;
+import com.school.baiqing.themoon.Util.TianLaiReadUtil;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+
 import org.geometerplus.android.fbreader.library.LibraryActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -25,7 +41,17 @@ public class LibraryFragmentCollect extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private List<String> mCategoryNameList = new ArrayList<>();
+    private List<String> mMoreList = new ArrayList<>();
+
+    private List<DiscoveryNovelData> mNovelDataList = new ArrayList<>();
+    private CategoryAdapter mCategoryAdapter;
+
     private Unbinder unbinder;
+    @BindView(R.id.srv_press_refresh)
+    public SmartRefreshLayout smartRefreshLayout;
+    @BindView(R.id.rv_press_category_novel_list)
+    public RecyclerView mCategoryNovelRv;
     @BindView(R.id.add_local_book)
     public LinearLayout addlocalbook;
     @BindView(R.id.add_network_book)
@@ -34,15 +60,6 @@ public class LibraryFragmentCollect extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LibraryFragmentCollect.
-     */
-    // TODO: Rename and change types and number of parameters
     public static LibraryFragmentCollect newInstance(String param1, String param2) {
         LibraryFragmentCollect fragment = new LibraryFragmentCollect();
         Bundle args = new Bundle();
@@ -66,9 +83,12 @@ public class LibraryFragmentCollect extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library_fragment_collect, container, false);
         unbinder = ButterKnife.bind(this,view);
+        initData();
+        mCategoryNovelRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         setOnClickLisener();
         return view;
     }
+
     public void setOnClickLisener(){
         addlocalbook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +104,10 @@ public class LibraryFragmentCollect extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onDetach() {
@@ -94,6 +118,83 @@ public class LibraryFragmentCollect extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+    protected void initData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mNovelDataList = TianLaiReadUtil.getCategory();
+                for (int i=0;i<mNovelDataList.size();i++){
+                    String t = mNovelDataList.get(i).getListname();
+                    mCategoryNameList.add(t);
+                    mMoreList.add("更多"+t);
+                }
+                if(!mNovelDataList.isEmpty()){
+                    Message msg = mhandler.obtainMessage(1);
+                    mhandler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+    Handler mhandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    initCategoryAdapter();
+                    break;
+                case 2:
+                    break;
+            }
+        }
+    };
+
+    private void initCategoryAdapter() {
+        mCategoryAdapter = new CategoryAdapter(getActivity(),
+                mCategoryNameList, mMoreList, mNovelDataList,
+                new CategoryAdapter.CategoryListener() {
+                    @Override
+                    public void clickNovel(String novelName) {
+
+                        if (!NetUtil.hasInternet(getActivity())) {
+                            return;
+                        }
+                        // 跳转到该小说的搜索结果页
+//                        Intent intent = new Intent(getActivity(), SearchActivity.class);
+//                        intent.putExtra(SearchActivity.KEY_NOVEL_NAME, novelName);
+//                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void clickMore(int position) {
+                        if (!NetUtil.hasInternet(getActivity())) {
+                            return;
+                        }
+                        int gender = 2;
+                        String major;
+                        switch (position) {
+                            case 0:
+                                major = APPCONST.CATEGORY_MAJOR_CBXS;
+                                break;
+                            case 1:
+                                major = APPCONST.CATEGORY_MAJOR_QCYQ;
+                                break;
+                            case 2:
+                                major = APPCONST.CATEGORY_MAJOR_ZJMZ;
+                                break;
+                            default:
+                                major = APPCONST.CATEGORY_MAJOR_RWSK;
+                                break;
+                        }
+                        // 跳转到全部小说页面
+//                        Intent intent = new Intent(getActivity(), AllNovelActivity.class);
+//                        intent.putExtra(AllNovelActivity.KEY_GENDER, gender);   // 性别
+//                        intent.putExtra(AllNovelActivity.KEY_MAJOR, major);     // 一级分类
+//                        startActivity(intent);
+                    }
+                });
+        mCategoryNovelRv.setAdapter(mCategoryAdapter);
     }
 
 }

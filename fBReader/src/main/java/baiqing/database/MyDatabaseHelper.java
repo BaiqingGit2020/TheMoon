@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
-    public static final String CREATE_BOOK = "create table if not exists book("
+    public static final String CREATE_BOOK = "create table if not exists Book("
             + "id text primary key, "
             + "name text, "
             + "imgUrl text, "
