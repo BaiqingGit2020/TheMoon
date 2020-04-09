@@ -1,20 +1,21 @@
 package com.school.baiqing.themoon.View;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.R;
+import com.school.baiqing.themoon.SearchBookActivity;
+import com.school.baiqing.themoon.Util.APPCONST;
 import com.school.baiqing.themoon.Util.DaoCaoRenReadUtil;
-import com.school.baiqing.themoon.View.SwipeCard.ItemRemovedListener;
+import com.school.baiqing.themoon.View.SwipeCard.ItemListener;
 import com.school.baiqing.themoon.View.SwipeCard.RecommendAdapter;
 import com.school.baiqing.themoon.View.SwipeCard.SwipeCardLayoutManager;
 import com.school.baiqing.themoon.View.SwipeCard.SwipeCardRecyclerView;
@@ -51,9 +52,11 @@ public class LibraryFragmentRecommend extends Fragment {
             switch (msg.what){
                 case 1:
                     initAdapter();
+                    spinKitView.setVisibility(View.GONE);
                     break;
                 case 2:
-                    //TODO no net
+                    spinKitView.setVisibility(View.VISIBLE);
+                    initData();
                     break;
             }
         }
@@ -96,16 +99,22 @@ public class LibraryFragmentRecommend extends Fragment {
             booklist.addAll(booklist);
         recommendAdapter = new RecommendAdapter(getActivity(),booklist);
         swipeCardRecyclerView.setAdapter(recommendAdapter);
-        spinKitView.setVisibility(View.GONE);
-        swipeCardRecyclerView.setRemovedListener(new ItemRemovedListener() {
+        swipeCardRecyclerView.setItemListener(new ItemListener() {
             @Override
             public void onRightRemoved() {
-//                Toast.makeText(getActivity(), list.get(list.size() - 1) + " was right removed", Toast.LENGTH_SHORT).show();
+                if(booklist.size()==1)handler.sendMessage(handler.obtainMessage(2));
             }
 
             @Override
             public void onLeftRemoved() {
-//                Toast.makeText(getActivity(), list.get(list.size() - 1) + " was left removed", Toast.LENGTH_SHORT).show();
+                if(booklist.size()==1)handler.sendMessage(handler.obtainMessage(2));
+            }
+
+            @Override
+            public void onItemClick() {
+                        Intent intent = new Intent(getActivity(),SearchBookActivity.class);
+                        intent.putExtra(APPCONST.Search,booklist.get(booklist.size()-1).getName());
+                        startActivity(intent);
             }
         });
     }

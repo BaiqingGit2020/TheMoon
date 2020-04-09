@@ -32,7 +32,7 @@ public class SearchBookPrensenter implements BasePresenter {
 
     private SearchBookActivity mSearchBookActivity;
     private SearchBookAdapter mSearchBookAdapter;
-    private String searchKey;//搜索关键字
+    private String searchKey ;//搜索关键字
     private ArrayList<Book> mBooks = new ArrayList<>();
     private ArrayList<SearchHistory> mSearchHistories = new ArrayList<>();
     private ArrayList<String> mSuggestions = new ArrayList<>();
@@ -62,6 +62,13 @@ public class SearchBookPrensenter implements BasePresenter {
                 case 3:
                     mSearchBookActivity.getLvSearchBooksList().setAdapter(null);
                     mSearchBookActivity.getPbLoading().setVisibility(View.GONE);
+                    mSearchBookActivity.getLlSearchErr().setVisibility(View.VISIBLE);
+                    break;
+                case 4:
+                    mSearchBookActivity.getLvSearchBooksList().setAdapter(null);
+                    mSearchBookActivity.getPbLoading().setVisibility(View.GONE);
+                    mSearchBookActivity.getTvSearchErrMsg().setText("当前没有书源呀，期待下一个版本吧");
+                    mSearchBookActivity.getLlSearchErr().setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -77,8 +84,9 @@ public class SearchBookPrensenter implements BasePresenter {
 
     @Override
     public void start() {
-
+        searchKey = mSearchBookActivity.getIntent().getStringExtra(APPCONST.Search);
         mSearchBookActivity.getTvTitleText().setText("搜索");
+        mSearchBookActivity.getLlSearchErr().setVisibility(View.GONE);
         mSearchBookActivity.getLlTitleBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +154,10 @@ public class SearchBookPrensenter implements BasePresenter {
         });
         initSuggestionBook();
         initHistoryList();
+        if(!searchKey.equals(APPCONST.Default)){
+            mSearchBookActivity.getEtSearchKey().setText(searchKey);
+            search();
+        }
     }
 
 
@@ -194,7 +206,8 @@ public class SearchBookPrensenter implements BasePresenter {
             @Override
             public void onFinish(Object o, int code) {
                 mBooks = (ArrayList<Book>) o;
-                mHandler.sendMessage(mHandler.obtainMessage(2));
+                if(mBooks.isEmpty())mHandler.sendMessage(mHandler.obtainMessage(4));
+                else mHandler.sendMessage(mHandler.obtainMessage(2));
             }
 
             @Override
@@ -210,6 +223,7 @@ public class SearchBookPrensenter implements BasePresenter {
      */
     private void search() {
         mSearchBookActivity.getPbLoading().setVisibility(View.VISIBLE);
+        mSearchBookActivity.getLlSearchErr().setVisibility(View.GONE);
         if (StringHelper.isEmpty(searchKey)) {
             mSearchBookActivity.getPbLoading().setVisibility(View.GONE);
             mSearchBookActivity.getLvSearchBooksList().setVisibility(View.GONE);

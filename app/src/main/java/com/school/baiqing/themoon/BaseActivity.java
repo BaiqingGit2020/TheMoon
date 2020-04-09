@@ -128,9 +128,4 @@ public class BaseActivity extends AppCompatActivity {
         return mInputMethodManager;
     }
 
-
-
-
-
-
 }

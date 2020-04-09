@@ -12,8 +12,6 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
@@ -38,7 +36,7 @@ public class SwipeCardRecyclerView extends RecyclerView {
 
     private float mBorder = dip2px(100);
 
-    private ItemRemovedListener mRemovedListener;
+    private ItemListener mItemListener;
 
     private FrameLayout mDecorView;
     private int[] mDecorViewLocation = new int[2];
@@ -68,8 +66,8 @@ public class SwipeCardRecyclerView extends RecyclerView {
         mAnimatorMap = new HashMap<>();
     }
 
-    public void setRemovedListener(ItemRemovedListener listener) {
-        mRemovedListener = listener;
+    public void setItemListener(ItemListener listener) {
+        mItemListener = listener;
     }
 
     @Override
@@ -138,17 +136,21 @@ public class SwipeCardRecyclerView extends RecyclerView {
         float targetX = 0;
         float targetY = 0;
         boolean del = false;
-        if (Math.abs(view.getX() - mTopViewX) < mBorder) {
+        if(Math.abs(view.getX() - mTopViewX) == 0 && Math.abs(view.getY() - mTopViewY)==0){
+            targetX = mTopViewX;
+            targetY = mTopViewY;
+            mItemListener.onItemClick();
+        }else if (Math.abs(view.getX() - mTopViewX) < mBorder) {
             targetX = mTopViewX;
             targetY = mTopViewY;
         } else if (view.getX() - mTopViewX > mBorder) {
             del = true;
             targetX = getScreenWidth() * 2;
-            mRemovedListener.onRightRemoved();
+            mItemListener.onRightRemoved();
         } else {
             del = true;
             targetX = -view.getWidth() - getScreenWidth();
-            mRemovedListener.onLeftRemoved();
+            mItemListener.onLeftRemoved();
         }
         View animView = view;
         TimeInterpolator interpolator;

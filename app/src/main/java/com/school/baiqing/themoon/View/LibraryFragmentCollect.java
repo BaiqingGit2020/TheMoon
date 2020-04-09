@@ -99,7 +99,9 @@ public class LibraryFragmentCollect extends Fragment {
         addnetworkbook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),SearchBookActivity.class));
+                Intent intent = new Intent(getActivity(), SearchBookActivity.class);
+                intent.putExtra(APPCONST.Search, APPCONST.Default);
+                startActivity(intent);
             }
         });
     }
@@ -153,17 +155,16 @@ public class LibraryFragmentCollect extends Fragment {
     private void initCategoryAdapter() {
         mCategoryAdapter = new CategoryAdapter(getActivity(),
                 mCategoryNameList, mMoreList, mNovelDataList,
-                new CategoryAdapter.CategoryListener() {
+                new CategoryListener() {
                     @Override
                     public void clickNovel(String novelName) {
 
                         if (!NetUtil.hasInternet(getActivity())) {
                             return;
                         }
-                        // 跳转到该小说的搜索结果页
-//                        Intent intent = new Intent(getActivity(), SearchActivity.class);
-//                        intent.putExtra(SearchActivity.KEY_NOVEL_NAME, novelName);
-//                        startActivity(intent);
+                        Intent intent = new Intent(getActivity(), SearchBookActivity.class);
+                        intent.putExtra(APPCONST.Search, novelName);
+                        startActivity(intent);
                     }
 
                     @Override

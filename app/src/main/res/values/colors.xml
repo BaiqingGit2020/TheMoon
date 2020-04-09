@@ -3,6 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="launch_text_color">#46bcef</color>
     <color name="text_blue">#3038cf</color>
     <color name="text_gray">#7d7e83</color>
     <color name="text_white">#f1f2f5</color>
@@ -22,6 +23,17 @@
     <color name="swipe_card_gradient_start">#cdcece</color>
     <color name="swipe_card_gradient_end">#656969</color>
     <color name="dark_gray">#ff999999</color>
+
+    <color name="novel_intro_top_image_bg_fg">#99111111</color>
+    <color name="novel_intro_novel_name_text">#fdfdfd</color>
+    <color name="novel_intro_novel_author_text">#ededed</color>
+    <color name="novel_intro_novel_web_site_text">#f1f1f1</color>
+    <color name="novel_intro_line_between_cover_and_introduce">#d1d1d1</color>
+    <color name="novel_intro_separate_line">#f1f1f1</color>
+    <color name="novel_intro_catalog_text">#333333</color>
+    <color name="novel_intro_catalog_bg_pressed">#f1f1f1</color>
+
+
     <!-- 黑色 -->
     <color name="black">#000000</color>
     <color name="gray">#808080</color>

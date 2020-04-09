@@ -27,10 +27,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private List<DiscoveryNovelData> mNovelDataList;
     private CategoryListener mListener;
 
-    public interface CategoryListener {
-        void clickNovel(String novelName);
-        void clickMore(int position);
-    }
 
     public CategoryAdapter(Context mContext, List<String> mCategoryNameList,
                            List<String> mMoreList, List<DiscoveryNovelData> mNovelDataList,

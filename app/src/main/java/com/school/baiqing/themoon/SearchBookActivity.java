@@ -43,6 +43,10 @@ public class SearchBookActivity extends BaseActivity {
     LinearLayout llHistoryView;
     @BindView(R.id.tg_suggest_book)
     TagGroup tgSuggestBook;
+    @BindView(R.id.ll_search_err)
+    LinearLayout llSearchErr;
+    @BindView(R.id.tv_search_err_massage)
+    TextView tvSearchErrMsg;
 
     private SearchBookPrensenter mSearchBookPrensenter;
 
@@ -113,5 +117,13 @@ public class SearchBookActivity extends BaseActivity {
 
     public LinearLayout getLlHistoryView() {
         return llHistoryView;
+    }
+
+    public LinearLayout getLlSearchErr() {
+        return llSearchErr;
+    }
+
+    public TextView getTvSearchErrMsg() {
+        return tvSearchErrMsg;
     }
 }

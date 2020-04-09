@@ -4,38 +4,44 @@
     package="com.school.baiqing.themoon">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.NETWORK_PROVIDER"/>
+    <uses-permission android:name="android.permission.NETWORK_PROVIDER" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ActivityMain">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:persistent="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".LaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ActivityMain"></activity>
         <activity android:name=".ActivityLogin" />
         <activity android:name=".ActivityRegister" />
-        <activity android:name="SearchBookActivity"/>
-        <activity android:name=".BookInfoActivity"/>
-        <activity android:name=".ReadActivity"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".FontsActivity"></activity>
+        <activity android:name=".SearchBookActivity" />
+        <activity android:name=".BookInfoActivity" />
+        <activity
+            android:name=".ReadActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".FontsActivity" />
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/network_security_config" />
+
+
     </application>
 
 </manifest>

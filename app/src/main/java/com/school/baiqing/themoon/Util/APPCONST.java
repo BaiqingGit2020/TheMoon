@@ -21,6 +21,8 @@ public class APPCONST {
 
     public static final String BOOK = "book";
     public static final String FONT = "font";
+    public static final String Search = "searchkey";
+    public static final String Default = "default";
 
     public static final String BookLocation_local = "local";
     public static final String BookLocation_network= "network";
