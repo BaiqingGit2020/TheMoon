@@ -1,14 +1,10 @@
 package com.school.baiqing.themoon.Util;
 
-import android.util.Log;
-
 import com.school.baiqing.themoon.GreenDao.entity.Book;
-import com.school.baiqing.themoon.View.DiscoveryNovelData;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;

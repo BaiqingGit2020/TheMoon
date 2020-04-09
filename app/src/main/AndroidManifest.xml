@@ -28,14 +28,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityMain"></activity>
-        <activity android:name=".ActivityLogin" />
-        <activity android:name=".ActivityRegister" />
-        <activity android:name=".SearchBookActivity" />
-        <activity android:name=".BookInfoActivity" />
+        <activity android:name=".View.User.ActivityLogin" />
+        <activity android:name=".View.User.ActivityRegister" />
+        <activity android:name=".View.SearchBook.SearchBookActivity" />
+        <activity android:name=".View.BookInfo.BookInfoActivity" />
         <activity
-            android:name=".ReadActivity"
+            android:name=".View.ReadBook.ReadActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".FontsActivity" />
+        <activity android:name=".View.ReadBook.FontsActivity" />
 
         <meta-data
             android:name="com.google.android.actions"

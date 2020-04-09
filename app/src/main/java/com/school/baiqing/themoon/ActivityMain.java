@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,16 +12,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fbreader.common.FBReaderHelper;
 import com.school.baiqing.themoon.Util.APPCONST;
-
-import org.geometerplus.android.fbreader.FBReaderApplication;
+import com.school.baiqing.themoon.View.BookShelf.ShelfFragment;
+import com.school.baiqing.themoon.View.Library.LibraryFragment;
+import com.school.baiqing.themoon.View.User.UserFragment;
 
 import java.sql.Date;
 

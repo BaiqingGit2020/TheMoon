@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@color/sys_bg2"
-    tools:context=".FontsActivity">
+    tools:context=".View.ReadBook.FontsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

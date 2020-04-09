@@ -9,14 +9,14 @@
     android:orientation="vertical">
 
 
-    <com.school.baiqing.themoon.View.SwipeCard.SwipeCardRecyclerView
+    <com.school.baiqing.themoon.View.Library.SwipeCardView.SwipeCardRecyclerView
         android:id="@+id/SwipCardView"
         android:layout_width="@dimen/swipcard_width"
         android:layout_height="@dimen/swipcard_height"
         android:layout_centerInParent="true"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="50dp">
-    </com.school.baiqing.themoon.View.SwipeCard.SwipeCardRecyclerView>
+    </com.school.baiqing.themoon.View.Library.SwipeCardView.SwipeCardRecyclerView>
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit_recom_card"

@@ -37,7 +37,7 @@
 
     </LinearLayout>
 
-    <com.school.baiqing.themoon.View.DragSortGridView
+    <com.school.baiqing.themoon.View.BookShelf.DragSortView.DragSortGridView
         android:id="@+id/gv_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:numColumns="auto_fit"
         android:scrollbars="none"
         android:verticalSpacing="10dp">
-    </com.school.baiqing.themoon.View.DragSortGridView>
+    </com.school.baiqing.themoon.View.BookShelf.DragSortView.DragSortGridView>
     </RelativeLayout>
 
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>

@@ -5,7 +5,7 @@ import android.os.Message;
 import android.view.View;
 
 import com.school.baiqing.themoon.Enums.Font;
-import com.school.baiqing.themoon.FontsActivity;
+import com.school.baiqing.themoon.View.ReadBook.FontsActivity;
 import com.school.baiqing.themoon.R;
 
 import java.util.ArrayList;

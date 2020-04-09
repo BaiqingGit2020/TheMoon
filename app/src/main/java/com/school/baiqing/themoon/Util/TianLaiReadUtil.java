@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.school.baiqing.themoon.GreenDao.entity.Book;
 import com.school.baiqing.themoon.GreenDao.entity.Chapter;
-import com.school.baiqing.themoon.View.DiscoveryNovelData;
+import com.school.baiqing.themoon.View.Library.DiscoveryNovelData;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
