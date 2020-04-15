@@ -29,7 +29,6 @@ public class DaoCaoRenReadUtil {
                 books.add(book);
 //                Log.d("themoonRecomm",book.getName());
             }
-
         }catch (IOException e){e.printStackTrace();}
         return books;
     }

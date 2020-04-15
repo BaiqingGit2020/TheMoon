@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 
+import okhttp3.FormBody;
+
 /**
  * Created by zhao on 2016/4/16.
  */
@@ -137,9 +139,9 @@ public class HttpDataSource {
      * @param output
      * @param callback
      */
-    public static void httpPost(String url, String output, final JsonCallback callback) {
-        Log.d("HttpPost:", url + "&" + output);
-        HttpUtil.sendPostRequest(url, output, new HttpCallback() {
+    public static void httpPost(String url, FormBody.Builder output, final JsonCallback callback) {
+        Log.d("HttpPost:", url + "?" + output.toString());
+        HttpUtil.sendPostRequest_okHttp(url, output, new HttpCallback() {
             @Override
             public void onFinish(Bitmap bm) {
 

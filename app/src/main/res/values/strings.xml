@@ -7,7 +7,7 @@
     <string name="https_host">https://www.baiqing.work</string>
     <string name="anti_hijacking_tips_home">TheMoon切换至后台运行</string>
     <string name="anti_hijacking_tips">TheMoon切换至后台运行</string>
-    <string name="register"> </string>
+    <string name="register">新用户注册</string>
     <string name="day">日间</string>
     <string name="night">夜间</string>
     <string name="chapter_list">【目录】</string>
@@ -17,7 +17,7 @@
 
 
     <string name="font_using">正在使用</string>
-    <string name="font_example">钊</string>
+    <string name="font_example">庆</string>
     <string name="font_use">立即使用</string>
 
     <string name="font">字体</string>

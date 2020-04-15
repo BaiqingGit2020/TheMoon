@@ -41,12 +41,14 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 
 import static java.lang.String.valueOf;
 
@@ -292,7 +294,7 @@ public class HttpUtil {
         }).start();
     }
 
-    public static void sendPostRequest_okHttp(final String address, final String output, final HttpCallback callback) {
+    public static void sendPostRequest_okHttp(final String address, final FormBody.Builder output, final HttpCallback callback) {
         new Thread(new Runnable() {
             HttpURLConnection connection = null;
             @Override
@@ -300,11 +302,12 @@ public class HttpUtil {
                 try {
                     MediaType contentType  = MediaType.parse("charset=utf-8");
                     OkHttpClient client = new OkHttpClient();
-                    RequestBody body = RequestBody.create(contentType, output);
+                    RequestBody body = output.build();
                     Request request = new Request.Builder()
                             .url(address)
                             .post(body)
                             .build();
+                    Log.i("http_okhttp",request.toString());
                     Response response = client.newCall(request).execute();
                     callback.onFinish(response.body().byteStream());
                 } catch (Exception e) {
@@ -451,40 +454,15 @@ public class HttpUtil {
      * @param params
      * @return
      */
-    public static String makePostOutput(Map<String, Object> params) {
-        StringBuilder output = new StringBuilder();
-        Iterator<String> it = params.keySet().iterator();
-        while (true) {
-            String name = it.next();
-            Log.d("http", name + "=" + params.get(name));
-            output.append(name);
-            output.append('=');
-            try {
-                if (URLCONST.isRSA) {
-                    if (name.equals("token")) {
-                        output.append(valueOf(params.get(name)));
-                    } else {
-                        output.append(StringHelper.encode(Base64.encodeToString(RSAUtilV2.encryptByPublicKey(valueOf(params.get(name)).getBytes(), APPCONST.publicKey), Base64.DEFAULT).replace("\n", "")));
-                    }
-                } else {
-                    output.append(valueOf(params.get(name)));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (!it.hasNext()) {
-                break;
-            }
-            output.append('&');
-            //不做URLEncoder处理
-//			try {
-//				url.append(URLEncoder.encode(String.valueOf(params.get(name)), UTF_8));
-//			} catch (UnsupportedEncodingException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+    public static FormBody.Builder makePostOutput(Map<String, Object> params) {
+
+
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String key : params.keySet()) {
+            //追加表单信息
+            builder.add(key, (String) params.get(key));
         }
-        return output.toString();
+        return builder;
     }
 
     public static void uploadFileRequest(final String actionUrl,

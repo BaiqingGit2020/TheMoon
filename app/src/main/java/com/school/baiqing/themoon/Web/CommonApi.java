@@ -2,8 +2,10 @@ package com.school.baiqing.themoon.Web;
 
 import com.school.baiqing.themoon.Util.TianLaiReadUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhao on 2017/7/24.
@@ -12,7 +14,24 @@ import java.util.Map;
 public class CommonApi extends BaseApi{
 
 
+    public static void RegisterToService(String id,String email,String password,final ResultCallback callback){
+        Map<String,Object> register = new HashMap<>();
+        register.put("username",id);
+        register.put("email",email);
+        register.put("password",password);
+        postCommonReturnStringApi(URLCONST.method_RegisterToService, register, new ResultCallback() {
+            @Override
+            public void onFinish(Object o, int code) {
+                callback.onFinish((String)o,code);
+            }
 
+            @Override
+            public void onError(Exception e) {
+                callback.onError(e);
+            }
+        });
+
+    }
 
     /**
      * 获取章节列表

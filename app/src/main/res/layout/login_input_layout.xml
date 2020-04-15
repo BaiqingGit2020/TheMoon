@@ -30,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dip"
                 android:background="#00000000"
-                android:hint="账号/用户名/邮箱"
+                android:maxLines="1"
+                android:hint="邮箱"
                 android:padding="5dip"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -60,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dip"
                 android:background="#00000000"
+                android:maxLines="1"
                 android:hint="密码"
                 android:inputType="textPassword"
                 android:padding="5dip"

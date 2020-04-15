@@ -9,9 +9,12 @@ public class URLCONST {
     // 命名空间
     public static String nameSpace_tianlai = "http://www.23txt.com";
 
-    public static String nameSpace_system = "http://10.10.123.31:8080/jeecg";
+
+    public static String nameSpace_system = "https://www.baiqing.work";
 
     public static boolean isRSA = false;
+
+    public static String method_RegisterToService = nameSpace_system+"/php/register.php";
 
     // 搜索小说
     public static String method_buxiu_search = "http://www.23txt.com/search.php";

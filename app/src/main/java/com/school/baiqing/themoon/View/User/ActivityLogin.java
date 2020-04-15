@@ -76,7 +76,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         view_password = findViewById(R.id.user_password);
         view_login = findViewById(R.id.button_login);
         view_rememberpassword = findViewById(R.id.remember_password);
-        view_signup = findViewById(R.id.register);
         spinKitView = findViewById(R.id.spin_kit);
 
         editor = getSharedPreferences("LoginMessage",MODE_PRIVATE).edit();
@@ -138,6 +137,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 .build();
         Call call=client.newCall(request);
         Log.i(TAG,call.toString());
+        Log.i(TAG,request.toString());
         //异步请求
         call.enqueue(new Callback() {
             @Override
